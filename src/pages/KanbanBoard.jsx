@@ -13,7 +13,7 @@ import {
   createTaskId,
   moveTaskToStatus
 } from '../utils/taskUtils.js';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 const statusOrder = STATUS_COLUMNS.map((column) => column.id);
 
@@ -25,6 +25,7 @@ export default function KanbanBoard() {
   );
   const [editingTask, setEditingTask] = useState(null);
   const [taskToDelete, setTaskToDelete] = useState(null);
+  const taskFormRef = useRef(null);
 
   function saveCategory(category) {
     if (!category) return;
@@ -90,14 +91,26 @@ export default function KanbanBoard() {
     );
   }
 
+  function handleEdit(task) {
+    setEditingTask(task);
+    window.requestAnimationFrame(() => {
+      taskFormRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+  }
+
   return (
     <div className='space-y-6'>
-      <TaskForm
-        task={editingTask}
-        categories={categories}
-        onSubmit={handleSubmit}
-        onCancel={() => setEditingTask(null)}
-      />
+      <div ref={taskFormRef}>
+        <TaskForm
+          task={editingTask}
+          categories={categories}
+          onSubmit={handleSubmit}
+          onCancel={() => setEditingTask(null)}
+        />
+      </div>
 
       <section className='grid gap-4 lg:grid-cols-3'>
         {STATUS_COLUMNS.map((column) => (
@@ -105,7 +118,7 @@ export default function KanbanBoard() {
             key={column.id}
             column={column}
             tasks={tasks.filter((task) => task.status === column.id)}
-            onEdit={setEditingTask}
+            onEdit={handleEdit}
             onDelete={handleDelete}
             onMove={handleMove}
           />

@@ -11,7 +11,7 @@ const baseButtonClasses =
 
 export default function Navbar() {
   return (
-    <header className='border-b border-slate-200 bg-white'>
+    <header className='sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur'>
       <nav className='mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8'>
         <div>
           <p className='text-xs font-semibold uppercase tracking-wide text-teal-700'>
